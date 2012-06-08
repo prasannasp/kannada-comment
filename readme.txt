@@ -14,7 +14,7 @@ Let your fellow blog readers to write their comments in Kannada language.
 
 This plugin enables Google Transliteration in wordpress comment form. So your blog readers can leave comments in Kannada script without the need of any other input engines. This is a great step to encourage people to write comments in Kannada language in your Kannada blog. This plugin adds a transliteration controller at the top of comment form. Users can click on the transliterate switch or press <strong>Ctrl+G</strong> to toggle between English and Kannada input languages. Default language is English. You can see the live action of this plugin at <a href="http://www.vedasudhe.com">vedasudhe.com</a>.
 
-This is the first public release of this plugin. I will add some more options in the next releases. 
+This is the first public release of this plugin. I will add some more options in the next releases. If you are interested in co-development of this plugin, please fork this plugin on GitHub - <a href="https://github.com/prasannasp/kannada-comment">https://github.com/prasannasp/kannada-comment</a>
 
 <strong>Get in touch:</strong><br />
 <ul>
