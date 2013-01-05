@@ -5,20 +5,18 @@ License: GPLv3
 License URI: http://www.gnu.org/copyleft/gpl.html
 Tags: kannada, comment, language, unicode, google transliteration, india
 Requires at least: 3.1
-Tested up to: 3.4 Beta 1
-Stable tag: 1.0
+Tested up to: 3.4.1
+Stable tag: 2.1
 
 Let your fellow blog readers to write their comments in Kannada language.
 
 == Description ==
 
-This plugin enables Google Transliteration in wordpress comment form. So your blog readers can leave comments in Kannada script without the need of any other input engines. This is a great step to encourage people to write comments in Kannada language in your Kannada blog. This plugin adds a transliteration controller at the top of comment form. Users can click on the transliterate switch or press <strong>Ctrl+G</strong> to toggle between English and Kannada input languages. Default language is English. You can see the live action of this plugin at <a href="http://www.vedasudhe.com">vedasudhe.com</a>.
-
-This is the first public release of this plugin. I will add some more options in the next releases. If you are interested in co-development of this plugin, please fork this plugin on GitHub - <a href="https://github.com/prasannasp/kannada-comment">https://github.com/prasannasp/kannada-comment</a>
+This plugin enables Google Transliteration in wordpress comment form. So your blog readers can leave comments in Kannada script without the need of any other input engines. This is a great step to encourage people to write comments in Kannada language in your Kannada blog. This plugin adds a transliteration controller at the top of comment form. You can change the place of Transliteration controller in plugin options page. Users can click on the transliterate switch or press <strong>Ctrl+G</strong> to toggle between English and Kannada input languages. Site admins can change default input language in WordPress Settings > Kannada Comment. You can see the live action of this plugin at <a href="http://www.vedasudhe.com">vedasudhe.com</a>.
 
 <strong>Get in touch:</strong><br />
 <ul>
-<li>Visit <a href="http://www.prasannasp.net/blog">developer's blog</a> for news and updates.</li>
+<li>Visit <a href="http://www.prasannasp.net/">developer's blog</a> for news and updates.</li>
 <li>Follow his <a href="http://github.com/prasannasp">GitHub repositories</a> for codes and goodies.</li>
 <li>Follow him on <a href="http://twitter.com/prasannasp">twitter</a> and be a friend on <a href="http://facebook.com/prasannaspp">facebook</a>.</li>
 </ul>
@@ -27,24 +25,22 @@ This is the first public release of this plugin. I will add some more options in
 
 1. Transliterate control switch.
 2. Writing comments in Kannada language when Transliteration is enabled.
+3. Kannada Comment options page
 
 == Installation ==
 
 1. Upload the `kannada-comment` folder to the `/wp-content/plugins/` directory
 2. Activate the Kannada Comment plugin through the 'Plugins' menu in WordPress
-3. Transliterate control switch will be automatically added at the top of wordpress comment form.
+3. Default input language will be Kannada. You can change default language on WP-Admin > Settings > Kannada Comment
+4. Transliterate controller will be automatically added at the top of wordpress comment form. You can change it's place in plugin options
 
 == Frequently Asked Questions ==
 
-= Why there is no options page for this plugin? =
-This is a very simple plugin which just enables Google Transliteration on Wordpress comment form. No need to configure anything. I'm working on giving admin an option to enable/disable transliteration by default though. It will be available in the next release.
+= How to change the default language? =
 
+Go to plugin options (WP-Admin --> Settings --> Kannada Comment) and set the default language to Kannada or English.
 
-= How can I enable Transliteration by default in the current version? =
-
-Open `kannada-comment.php` file and change <strong>`transliterationEnabled: false`</strong> to <strong>`transliterationEnabled: true`</strong>
-
-= Does it work with Facebook comment, disqus or any other commenting systems? =
+= Does this plugin work with Facebook comment, disqus or any other commenting systems? =
 
 No, it works with default Wordpress commenting system only. Facebook comment, disqus or any other commenting systems are not supported in this plugin.
 
@@ -54,7 +50,15 @@ No, Transliteration is enabled only for comment form `textarea` only. So, it wil
 
 = How to change the position of Transliterate control switch? =
 
-Open `kannada-comment.php` file and replace <strong>`add_action('comment_form_top',  'kannada_comment_switch');`</strong> with <strong>`add_action('comment_form',  'kannada_comment_switch');`</strong> to move transliterate control switch below the comment text area and replace with <strong>`add_action('comment_form_after',  'kannada_comment_switch');`</strong> to move at the bottom of comment form. I will add the option to set the position of `Transliterate control switch` in the next release.
+I've added an option to change the place Transliteration Controller in version 2.0. You can change it's position in plugin options page. You can move it to,
+<ul>
+<li>Before comment form</li>
+<li>Top of the comment form, before name and email fields</li>
+<li>Within comment form, after comment text area</li>
+<li>After the comment form</li>
+</ul>
+
+Default is <strong>Top of the comment form, before name and email fields</strong>
 
 == Other Notes ==
 
@@ -62,7 +66,7 @@ Open `kannada-comment.php` file and replace <strong>`add_action('comment_form_to
 
 Contact the developer using his <a href="http://www.prasannasp.net/contact/">contact form</a> for help and support. Also, please leave him a message if you are interested in co-development of this plugin.
 
-= How to style the Transliterate control switch? =
+= How to style the Transliterate controller? =
 
 <strong>Transliterate control switch</strong> is wrapped with <strong>kncomment</strong> div and description with <strong>kncomment-text</strong> class. Use them in your theme to style the controller.
 
@@ -71,9 +75,25 @@ This plugin is tested and works well with default <a href="http://wordpress.org/
 
 == Changelog ==
 
+= 2.1 =
+* Bug fixes
+* The options stored in the database will be retained even after deactivating the plugin. This is to prevent the removal of plugin options upon plugin update/reactivation. If you want to clear the database entries upon plugin deactivation, select <strong>Restore defaults upon plugin deactivation/reactivation</strong> in plugin options.
+
+= 2.0 =
+* Added option to change the position of Transliteration Controller
+* Added option to change the title of Transliteration Controller. You can now tell your blog readers how to use transliteration in Kannada script!
+
+For devs,
+
+Removed <strong>var Text_Area=document.getElementsByTagName("textarea")[0].id;</strong>. will be just using <strong>var ids = ["comment"];</strong> to enable transliteration on comment form. Hope it doesn't break on hard coded comment form!.
+
+= 1.1 =
+* Added an option to set default language.
+If user has selected no default language, Kannada will be set as default language upon activation.
+
 = 1.0 =
 
-Initial public release.
+* Initial public release.
 
 == Upgrade Notice ==
-*No Upgrade Notice so far.
+* No Upgrade Notice so far.

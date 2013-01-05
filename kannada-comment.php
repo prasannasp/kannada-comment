@@ -4,7 +4,7 @@ Plugin Name: Kannada Comment
 Plugin URI: http://www.prasannasp.net/kannada-comment-wordpress-plugin
 Description: Let your fellow blog readers to write their comments in Kannada language. This plugin uses Google Transliteration API to transliterate input text to Kannada script in Wordpress comment form. Admins can choose the default language on options page. User can press Ctrl+G to toggle between Kannada and English.
 Author: Prasanna SP
-Version: 2.0
+Version: 2.1
 Author URI: http://www.prasannasp.net/
 */
 
@@ -27,19 +27,20 @@ Author URI: http://www.prasannasp.net/
 // Lets define the defaults first
 function kncm_add_defaults() {
 	$tmp = get_option('kncm_options');
+		if(($tmp['kncm_default_options_db']=='1')||(!is_array($tmp))) {
 		$arr = array(	"lang_select" => "true",
 				"toggle_switch_place" => "comment_form_top",
+				"kncm_default_options_db" => "",
 				"comment_switch_txt" => "Click this button or press <strong>Ctrl+G</strong> to toggle between Kannada and English"
 		);
 		update_option('kncm_options', $arr);
+	}
 }
-
 // Main function
 function kannada_comment() {
 	$options = get_option('kncm_options');
 	$language = $options['lang_select'];
 ?>
-
 <script type="text/javascript" src="http://www.google.com/jsapi">    
 </script>    
 <script type="text/javascript">      
@@ -114,14 +115,14 @@ function kncm_options_form() {
 				</tr>
 
 				<tr>
-					<th scope="row">Language Switch Title</th>
+					<th scope="row">Transliteration Controller Title</th>
 					<td>
-						<input type="text" size="75" name="kncm_options[comment_switch_txt]" value="<?php echo $options['comment_switch_txt']; ?>" />
+						<input type="text" size="45" name="kncm_options[comment_switch_txt]" value="<?php echo $options['comment_switch_txt']; ?>" />
 					</td>
 				</tr>
 				
 				<tr valign="top">
-					<th scope="row">Place of the language toggle box</th>
+					<th scope="row">Place of the Transliteration Controller</th>
 					<td>
 						<!-- comment_form_before -->
 						<label><input name="kncm_options[toggle_switch_place]" type="radio" value="comment_form_before" <?php checked('comment_form_before', $options['toggle_switch_place']); ?> /> Before comment form</label><br />
@@ -136,25 +137,24 @@ function kncm_options_form() {
 						<label><input name="kncm_options[toggle_switch_place]" type="radio" value="comment_form_after" <?php checked('comment_form_after', $options['toggle_switch_place']); ?> /> After the comment form</label>
 					</td>
 				</tr>
+				<tr><td colspan="2"><div style="margin-top:10px;"></div></td></tr>
+				<tr valign="top" style="border-top:#dddddd 1px solid;">
+					<th scope="row">Database Options:</th>
+					<td>
+						<label><input name="kncm_options[kncm_default_options_db]" type="checkbox" value="1" <?php if (isset($options['kncm_default_options_db'])) { checked('1', $options['kncm_default_options_db']); } ?> /> Restore defaults upon plugin deactivation/reactivation</label>
+						<br /><span style="color:#666666;margin-left:2px;">Only check this if you want to reset plugin settings upon Plugin reactivation</span>
+					</td>
+				</tr>
 			
 			</table>
 			<p class="submit">
 			<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 			</p>
 		</form>
+<hr />
+<p style="margin-top:15px;font-size:14px;">If you have found this plugin is useful, please consider making a <a href="http://prasannasp.net/donate/" target="_blank">donation</a>. Thank you!</p>
 	</div>
 <?php	
-}
-
-// Display a Settings link on the main Plugins page
-function kncm_plugin_action_links( $links, $file ) {
-
-	if ( $file == plugin_basename( __FILE__ ) ) {
-		$kncm_links = '<a href="'.get_admin_url().'options-general.php?page=kannada-comment/kannada-comment.php">'.__('Settings').'</a>';
-		array_unshift( $links, $kncm_links );
-	}
-
-	return $links;
 }
 
 // Change the place of transliteration controller according to user settings
@@ -162,14 +162,14 @@ function kannada_comment_switch_hook() {
 	$options = get_option('kncm_options');
 	$switchplace = $options['toggle_switch_place'];
 
-if ( $switchplace == comment_form )
+if ( $switchplace == 'comment_form' )
 
 add_action('comment_form', 'kannada_comment_switch');
 
-elseif ( $switchplace == comment_form_before )
+elseif ( $switchplace == 'comment_form_before' )
 add_action('comment_form_before', 'kannada_comment_switch');
 
-elseif ( $switchplace == comment_form_after )
+elseif ( $switchplace == 'comment_form_after' )
 add_action('comment_form_after', 'kannada_comment_switch');
 
 else 
@@ -177,13 +177,51 @@ else
 add_action('comment_form_top', 'kannada_comment_switch');
 }
 
-// Lets call the Transliteration control function
+// Call the Transliteration control function
 kannada_comment_switch_hook();
+
+// Delete options table entries ONLY when plugin deactivated AND deleted
+function kncm_delete_plugin_options() {
+	delete_option('kncm_options');
+}
 
 // Set-up Action and Filter Hooks
 register_activation_hook(__FILE__, 'kncm_add_defaults');
+register_uninstall_hook(__FILE__, 'kncm_delete_plugin_options');
 add_action('admin_init', 'kncm_init' );
 add_action('admin_menu', 'kncm_add_options_page');
 add_filter('plugin_action_links', 'kncm_plugin_action_links', 10, 2 );
 add_action('comment_form', 'kannada_comment');
+
+// Display a Settings link on the main Plugins page
+function kncm_plugin_action_links( $links, $file ) {
+
+	if ( $file == plugin_basename( __FILE__ ) ) {
+		$kncm_links1 = '<a href="'.get_admin_url().'options-general.php?page=kannada-comment/kannada-comment.php">'.__('Settings').'</a>';
+		$kncm_links2 = '<a href="http://forum.prasannasp.net/forum/plugin-support/kannada-comment/" title="Kannada Comment plugin support forum" target="_blank">'.__('Support').'</a>';
+		array_unshift( $links, $kncm_links1, $kncm_links2 );
+	}
+
+	return $links;
+}
+
+// Donate link on manage plugin page
+function kncm_pluginspage_links( $links, $file ) {
+
+$plugin = plugin_basename(__FILE__);
+
+// create links
+if ( $file == $plugin ) {
+return array_merge(
+$links,
+array( '<a href="http://www.prasannasp.net/donate/" target="_blank" title="Donate for this plugin via PayPal">Donate</a>',
+'<a href="http://www.prasannasp.net/wordpress-plugins/" target="_blank" title="View more plugins from the developer">More Plugins</a>',
+'<a href="http://twitter.com/prasannasp" target="_blank" title="Follow me on twitter!">twitter!</a>'
+ )
+);
+			}
+return $links;
+
+	}
+add_filter( 'plugin_row_meta', 'kncm_pluginspage_links', 10, 2 );
 ?>
